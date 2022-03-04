@@ -10,7 +10,7 @@ export const GithubProvider = ({ children }) => {
 	const [loading, setLoading] = useState(true);
 
 	const fetchUsers = async () => {
-		const response = await fetch(`${GITHUB_URL}users`, {
+		const response = await fetch(`${GITHUB_URL}/users`, {
 			headers: {
 				Authorization: `token ${GITHUB_TOKEN}`,
 			},
@@ -21,4 +21,12 @@ export const GithubProvider = ({ children }) => {
 		setUsers(data);
 		setLoading(false);
 	};
+
+	return (
+		<GithubContext.Provider value={{ users, loading, fetchUsers }}>
+			{children}
+		</GithubContext.Provider>
+	);
 };
+
+export default GithubContext;
