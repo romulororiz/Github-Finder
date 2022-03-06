@@ -2,18 +2,21 @@
 import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/layout/Spinner';
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import GithubContext from '../context/github/GithubContext';
+import RepoList from '../components/repos/RepoList';
 
 function User() {
-	const { getUser, user, loading } = useContext(GithubContext);
+	const { getUser, user, loading, getUserRepos, repos } =
+		useContext(GithubContext);
 
 	// get params from URL
 	const params = useParams();
 
 	useEffect(() => {
 		getUser(params.login);
+		getUserRepos(params.login);
 	}, []);
 
 	const {
@@ -78,7 +81,7 @@ function User() {
 								</a>
 							</div>
 						</div>
-						<div div className='w-full rounded-lg shadow-md bg-base-100 stats'>
+						<div className='w-full rounded-lg shadow-md bg-base-100 stats'>
 							{location && (
 								<div className='stat'>
 									<div className='stat-title text-md'>Location</div>
@@ -126,7 +129,7 @@ function User() {
 							{followers}
 						</div>
 					</div>
-                    <div className='stat'>
+					<div className='stat'>
 						<div className='stat-figure text-secondary'>
 							<FaUserFriends className='text-3xl md:text-5xl' />
 						</div>
@@ -135,7 +138,7 @@ function User() {
 							{following}
 						</div>
 					</div>
-                    <div className='stat'>
+					<div className='stat'>
 						<div className='stat-figure text-secondary'>
 							<FaCodepen className='text-3xl md:text-5xl' />
 						</div>
@@ -144,7 +147,7 @@ function User() {
 							{public_repos}
 						</div>
 					</div>
-                    <div className='stat'>
+					<div className='stat'>
 						<div className='stat-figure text-secondary'>
 							<FaStore className='text-3xl md:text-5xl' />
 						</div>
@@ -154,6 +157,7 @@ function User() {
 						</div>
 					</div>
 				</div>
+				<RepoList repos={repos} />
 			</div>
 		</>
 	);
