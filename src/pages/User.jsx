@@ -8,7 +8,7 @@ import GithubContext from '../context/github/GithubContext';
 import RepoList from '../components/repos/RepoList';
 
 function User() {
-	const { getUser, user, loading, getUserRepos, repos } =
+	const { getUser, user, loading, getUserRepos, repos, clearUsers } =
 		useContext(GithubContext);
 
 	// get params from URL
@@ -44,7 +44,7 @@ function User() {
 		<>
 			<div className='w-full mx-auto lg:w-10/12'>
 				<div className='mb-4'>
-					<Link to='/' className='btn btn-ghost'>
+					<Link to='/' className='btn btn-ghost' onClick={() => clearUsers()}>
 						Back To Search
 					</Link>
 				</div>

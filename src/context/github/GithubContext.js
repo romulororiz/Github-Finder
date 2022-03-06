@@ -33,6 +33,10 @@ export const GithubProvider = ({ children }) => {
 
 		const { items } = await response.json();
 
+		if (items.length === 0) {
+			window.location = '/notfound';
+		}
+
 		dispatch({
 			type: 'GET_USERS',
 			payload: items,
@@ -53,7 +57,6 @@ export const GithubProvider = ({ children }) => {
 			window.location = '/notfound';
 		} else {
 			const data = await response.json();
-
 			dispatch({
 				type: 'GET_USER',
 				payload: data,
