@@ -1,23 +1,30 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FaCodepen, FaStore, FaUserFriends, FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Spinner from '../components/layout/Spinner';
 import { useEffect, useContext, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
+import { getUser, getUserRepos } from '../context/github/GithubActions';
 import GithubContext from '../context/github/GithubContext';
 import RepoList from '../components/repos/RepoList';
 
 function User() {
-	const { getUser, user, loading, getUserRepos, repos, clearUsers } =
-		useContext(GithubContext);
+	const { user, loading, repos, dispatch } = useContext(GithubContext);
 
 	// get params from URL
 	const params = useParams();
 
 	useEffect(() => {
-		getUser(params.login);
-		getUserRepos(params.login);
-	}, []);
+		dispatch({ type: 'SET_LOADING' });
+		const getUserData = async () => {
+			// Get user
+			const userData = await getUser(params.login);
+			dispatch({ type: 'GET_USER', payload: userData });
+			// Get user repos
+			const userRepoData = await getUserRepos(params.login);
+			dispatch({ type: 'GET_REPOS', payload: userRepoData });
+		};
+		getUserData();
+	}, [dispatch, params.login]);
 
 	const {
 		name,
@@ -44,7 +51,13 @@ function User() {
 		<>
 			<div className='w-full mx-auto lg:w-10/12'>
 				<div className='mb-4'>
-					<Link to='/' className='btn btn-ghost' onClick={() => clearUsers()}>
+					<Link
+						to='/'
+						className='btn btn-ghost'
+						onClick={() => {
+							dispatch({ type: 'CLEAR_USERS' });
+						}}
+					>
 						Back To Search
 					</Link>
 				</div>
